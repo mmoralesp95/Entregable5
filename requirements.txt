@@ -1,0 +1,12 @@
+Flask
+Flask-SQLAlchemy
+pytest
+flasgger
+openai
+python-dotenv
+requests
+pydantic
+mysql-connector-python
+jinja2
+pymysql
+cryptography
