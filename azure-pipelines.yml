@@ -20,11 +20,6 @@ stages:
   - job: Build
     displayName: Build and Push image
     steps:
-      # Si tu agente no tiene Docker, descomenta esto:
-      # - task: DockerInstaller@0
-      #   inputs:
-      #     dockerVersion: '17.09.0-ce'
-
       - task: Docker@2
         displayName: Build and Push image to ACR
         inputs:
@@ -46,24 +41,10 @@ stages:
         displayName: Deploy to Azure Container App
         inputs:
           azureSubscription: 'entregable5-azure-connection' # ARM connection
-          scriptType: 'bash'
+          scriptType: 'ps'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            az containerapp update \
-              --name entregable5containerapp \
-              --resource-group IAEntregable5group \
-              --image $(acrLoginServer)/$(imageName):$(imageTag) \
-              --set-env-vars \
-                AZURE_OPENAI_API_KEY=$(AZURE_OPENAI_API_KEY) \
-                OPENAI_API_VERSION=$(OPENAI_API_VERSION) \
-                AZURE_OPENAI_ENDPOINT=$(AZURE_OPENAI_ENDPOINT) \
-                AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT) \
-                MYSQL_DATABASE=$(MYSQL_DATABASE) \
-                MYSQL_USER=$(MYSQL_USER) \
-                MYSQL_PASSWORD=$(MYSQL_PASSWORD) \
-                MYSQL_ROOT_PASSWORD=$(MYSQL_ROOT_PASSWORD) \
-                DATABASE_URL=$(DATABASE_URL) \
-                APP_SECRET_KEY=$(APP_SECRET_KEY)
+            az containerapp update --name entregable5containerapp --resource-group IAEntregable5group --image $(acrLoginServer)/$(imageName):$(imageTag) --set-env-vars AZURE_OPENAI_API_KEY=$(AZURE_OPENAI_API_KEY) OPENAI_API_VERSION=$(OPENAI_API_VERSION) AZURE_OPENAI_ENDPOINT=$(AZURE_OPENAI_ENDPOINT) AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT) MYSQL_DATABASE=$(MYSQL_DATABASE) MYSQL_USER=$(MYSQL_USER) MYSQL_PASSWORD=$(MYSQL_PASSWORD) MYSQL_ROOT_PASSWORD=$(MYSQL_ROOT_PASSWORD) DATABASE_URL=$(DATABASE_URL) APP_SECRET_KEY=$(APP_SECRET_KEY)
         env:
           AZURE_OPENAI_API_KEY: $(AZURE_OPENAI_API_KEY)
           OPENAI_API_VERSION: $(OPENAI_API_VERSION)

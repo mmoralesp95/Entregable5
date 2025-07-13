@@ -52,7 +52,7 @@ Este proyecto es una aplicación web desarrollada en Flask que permite gestionar
 
 1. **Clona el repositorio:**
    ```bash
-   git clone https://github.com/mmoralesp95/Proyecto_IA.git
+   git clone https://github.com/mmoralesp95/Entregable5.git
    ```
 2. **Crea un entorno virtual e instala dependencias:**
    ```bash
