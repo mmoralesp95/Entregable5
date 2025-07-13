@@ -14,6 +14,27 @@ variables:
   acrLoginServer: 'entregable5acr.azurecr.io'
 
 stages:
+- stage: Test
+  displayName: Run Tests
+  jobs:
+    - job: UnitTests
+      displayName: Run unit and integration tests
+      steps:
+        - checkout: self
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: '3.11'
+            addToPath: true
+        - script: |
+            pip install -r requirements.txt
+            pip install pytest pytest-cov
+            pytest test/ --maxfail=1 --disable-warnings --junitxml=test-results.xml
+          displayName: 'Run pytest'
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'JUnit'
+            testResultsFiles: 'test-results.xml'
+            failTaskOnFailedTests: true
 - stage: BuildAndPush
   displayName: Build and Push Docker Image
   jobs:
