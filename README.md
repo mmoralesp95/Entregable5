@@ -1,6 +1,6 @@
 # Proyecto IA: Gestión de Historias de Usuario y Tareas con Azure OpenAI
 
-Este proyecto es una aplicación web desarrollada en Flask que permite gestionar historias de usuario y tareas de manera inteligente, utilizando la API de Azure OpenAI para la generación automática de historias y tareas a partir de prompts en lenguaje natural. Incluye integración con bases de datos SQL, despliegue con Docker y un pipeline CI/CD en GitHub Actions.
+Este proyecto es una aplicación web desarrollada en Flask que permite gestionar historias de usuario y tareas de manera inteligente, utilizando la API de Azure OpenAI para la generación automática de historias y tareas a partir de prompts en lenguaje natural. Incluye integración con bases de datos SQL, despliegue con Docker y un pipeline CI/CD en Azure DevOps.
 ---
 ## Características
 
@@ -10,7 +10,7 @@ Este proyecto es una aplicación web desarrollada en Flask que permite gestionar
 - **Interfaz web moderna** con Bootstrap.
 - **Persistencia en base de datos SQL** (MySQL por defecto).
 - **Despliegue fácil con Docker y docker-compose**.
-- **Pipeline CI/CD** con GitHub Actions.
+- **Pipeline CI/CD** con Azure DevOps.
 - **Testing automatizado** con pytest.
 
 ## Tecnologías utilizadas
@@ -23,7 +23,6 @@ Este proyecto es una aplicación web desarrollada en Flask que permite gestionar
 - Azure OpenAI (API)
 - MySQL
 - Docker & docker-compose
-- GitHub Actions (CI/CD)
 - Bootstrap 5
 ---
 
@@ -44,7 +43,7 @@ Este proyecto es una aplicación web desarrollada en Flask que permite gestionar
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
-└── .github/workflows/ci.yml
+└── azure-pipelines.yml
 ```
 ---
 
@@ -52,7 +51,7 @@ Este proyecto es una aplicación web desarrollada en Flask que permite gestionar
 
 1. **Clona el repositorio:**
    ```bash
-   git clone https://github.com/mmoralesp95/Entregable5.git
+   git clone https://miguelmorales144@dev.azure.com/miguelmorales144/Entregable5/_git/Entregable5
    ```
 2. **Crea un entorno virtual e instala dependencias:**
    ```bash
@@ -105,39 +104,32 @@ pytest
 ---
 ## CI/CD
 
-El proyecto incluye un pipeline de CI/CD en [`.github/workflows/ci.yml`](.github/workflows/ci.yml) que:
+El proyecto utiliza **Azure Pipelines** para la integración y entrega continua, definido en el archivo `azure-pipelines.yml` en la raíz del repositorio.
 
-- Instala dependencias.
-- Espera a que la base de datos esté lista.
-- Ejecuta los tests.
-- Construye y sube la imagen Docker a Docker Hub.
+### ¿Qué hace el pipeline?
 
-### ¿Cómo funciona el pipeline?
+- Se activa automáticamente en cada push a la rama `main`.
+- Se ejecutan los test
+- Construye la imagen Docker de la aplicación usando el archivo `Dockerfile`.
+- Publica la imagen en Azure Container Registry (ACR).
+- Despliega la imagen en Azure Container Apps, actualizando la aplicación con la nueva versión.
+- Durante el despliegue, configura todas las variables de entorno necesarias (claves, credenciales, endpoints, etc.) de forma segura usando los secretos definidos en Azure Pipelines.
 
-- Cada vez que haces un `push` a la rama `main`, GitHub Actions ejecuta automáticamente el workflow.
-- Si algún test falla, el pipeline se detiene y no sube la imagen.
-- Si todo pasa, la imagen se sube a tu repositorio de Docker Hub.
+### Estructura del pipeline
+1. **Run Tests:**  
+   - Se ejecutan los test.
 
----
+2. **BuildAndPush:**  
+   - Construye la imagen Docker.
+   - La sube al Azure Container Registry configurado.
 
-## Variables de entorno
+3. **DeployToContainerApp:**  
+   - Despliega la imagen recién construida en Azure Container Apps.
+   - Pasa las variables de entorno necesarias para el funcionamiento de la aplicación.
 
-Las variables de entorno utilizadas en la aplicación se gestionan mediante los *secrets* y *variables* de GitHub Actions para el repositorio.
+### Variables y secretos
 
----
-
-## Uso de la imagen desde Docker Hub
-
-Una vez subida, cualquier usuario puede desplegar la aplicación con:
-```bash
-docker pull mmoralesp23/flask-app:latest
-docker run -p 5000:5000 mmoralesp23/flask-app:latest
-```
-Enlace a la imagen: [https://hub.docker.com/repository/docker/mmoralesp23/flask-app](https://hub.docker.com/repository/docker/mmoralesp23/flask-app)
-
-- Accede a [http://localhost:5000](http://localhost:5000) para ver el saludo inicial.
-- Accede a [http://localhost:5000/user-stories](http://localhost:5000/user-stories) para usar la aplicación completa.
-
+Las variables sensibles (como claves de API, credenciales de base de datos, etc.) se gestionan de forma segura mediante las **variables y secretos** de Azure Pipelines y no se incluyen en el código fuente.
 
 **Autor:** Miguel Morales Pareja
 
