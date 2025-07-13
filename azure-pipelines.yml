@@ -5,6 +5,8 @@ trigger:
 
 pool:
   name: 'default'
+  demands:
+    - agent.name -equals agente-windows
 
 variables:
   imageName: 'entregable5-app'
