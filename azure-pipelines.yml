@@ -4,9 +4,7 @@ trigger:
       - main 
 
 pool:
-  name: 'default'
-  demands:
-    - agent.name -equals agente-windows
+  vmImage: 'ubuntu-latest'
 
 variables:
   imageName: 'entregable5-app'
