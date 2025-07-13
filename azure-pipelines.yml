@@ -43,7 +43,7 @@ stages:
       - task: AzureCLI@2
         displayName: Deploy to Azure Container App
         inputs:
-          azureSubscription: 'NombreDelServiceConnectionAzure' # ARM connection
+          azureSubscription: 'entregable5-azure-connection' # ARM connection
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
